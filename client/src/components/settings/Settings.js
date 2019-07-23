@@ -3,38 +3,96 @@ import { Link } from 'react-router-dom';
 import { Row, Col, Form, Button, Table } from 'react-bootstrap';
 import './Settings.css';
 export default class Settings extends Component{
+    constructor(props) {
+        super(props);
+        this.state = {
+          mealName: '',
+          description: '',
+          mealType: '',
+          errors: {}
+        };
+      }
+
+    onChange = (e) => {
+        console.log('-----',e.target.name ,e.target.value);
+    this.setState({
+        [e.target.name]: e.target.value
+    });
+    };
+
+    onSubmit = (e) => {
+        console.log('-----', e.target.value);
+        const {
+          mealName,
+          description,
+          mealType,
+        } = this.state;
+    
+        const newUser = {
+          mealName: mealName,
+          description: description,
+          mealType: mealType,
+        };
+    
+        const { registerUser } = this.props;
+    
+        e.preventDefault();
+    
+      };
+
+    renderAddMeal = () => {
+        return(
+            <React.Fragment>
+                <h5>Add a meal</h5>
+                <Form onSubmit={this.onSubmit}>
+                    <Form.Group controlId="formMealName">
+                        <Form.Label>Meal Name</Form.Label>
+                        <Form.Control
+                            name="mealName" 
+                            type="text"
+                            placeholder="Meal Name" 
+                            onChange={this.onChange}
+                        />
+                    </Form.Group>
+
+                    <Form.Group controlId="formMealDes">
+                        <Form.Label>Description</Form.Label>
+                        <Form.Control 
+                            type="textarea" 
+                            rows="4" 
+                            name="description"
+                            onChange={this.onChange}
+                        />
+                        <Form.Text className="text-muted">
+                        Enter the curries.
+                        </Form.Text>
+                    </Form.Group>
+                    <Form.Group controlId="exampleForm.ControlSelect1">
+                        <Form.Label>Select Type</Form.Label>
+                        <Form.Control as="select" onChange={this.onChange}>
+                        <option>Lunch</option>
+                        <option>Diner</option>
+                        </Form.Control>
+                    </Form.Group>
+                    <Button size="sm" variant="success" type="submit">
+                        Submit
+                    </Button>
+                </Form>
+            </React.Fragment>
+        );
+    }
+
+
     render(){
+        const addMeal = this.renderAddMeal()
+
         return(
             <div>
                 <div className="content border border-dark">
                 <h4>Meal Order Settings</h4>
                 <Row>
                 <Col md={3}>
-                <h5>Add a meal</h5>
-                    <Form>
-                        <Form.Group controlId="formMealName">
-                            <Form.Label>Meal Name</Form.Label>
-                            <Form.Control type="text" placeholder="Meal Name" />
-                        </Form.Group>
-
-                        <Form.Group controlId="formMealDes">
-                            <Form.Label>Description</Form.Label>
-                            <Form.Control type="textarea" rows="4" />
-                            <Form.Text className="text-muted">
-                            Enter the curries.
-                            </Form.Text>
-                        </Form.Group>
-                        <Form.Group controlId="exampleForm.ControlSelect1">
-                            <Form.Label>Select Type</Form.Label>
-                            <Form.Control as="select">
-                            <option>Lunch</option>
-                            <option>Diner</option>
-                            </Form.Control>
-                        </Form.Group>
-                        <Button size="sm" variant="success" type="submit">
-                            Submit
-                        </Button>
-                    </Form>
+                    {addMeal}
                 </Col>
                 <Col md={6}>
                 <h5>Today's meal sets</h5>
