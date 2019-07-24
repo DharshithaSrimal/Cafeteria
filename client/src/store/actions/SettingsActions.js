@@ -6,14 +6,15 @@ import {
  } from '../types/SettingTypes';
 
 //set meal order
-export const setMealOrder = (userData, history) => dispatch => {
+export const setMealOrder = (newMealOrder) => dispatch => {
   axios
-    .post('/neworder', userData)
-    .then(res => history.push('/settings'))
+    .post('/neworder', newMealOrder)
+    // .then(res => history.push('/settings'))
     .catch(err =>
-      dispatch({
-        type: 'GET_ERRORS',
-        payload: err.response.data
-      })
+      console.log('===',err)
+      // dispatch({
+      //   type: 'GET_ERRORS',
+      //   payload: err.response.data
+      // })
     );
 };

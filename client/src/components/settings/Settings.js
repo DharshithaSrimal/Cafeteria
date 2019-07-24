@@ -2,7 +2,12 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Row, Col, Form, Button, Table } from 'react-bootstrap';
 import './Settings.css';
-export default class Settings extends Component{
+import { setMealOrder } from '../../store/actions/SettingsActions';
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+
+
+class Settings extends Component{
     constructor(props) {
         super(props);
         this.state = {
@@ -14,29 +19,37 @@ export default class Settings extends Component{
       }
 
     onChange = (e) => {
-        console.log('-----',e.target.name ,e.target.value);
-    this.setState({
-        [e.target.name]: e.target.value
-    });
+        this.setState({
+            [e.target.name]: e.target.value
+        });
     };
 
+    onMealTypeSelect = (e) => {
+        this.setState({
+            mealType: e.target.value
+        });
+    }
+
     onSubmit = (e) => {
-        console.log('-----', e.target.value);
+        e.preventDefault();
         const {
           mealName,
           description,
           mealType,
         } = this.state;
     
-        const newUser = {
+        const newMealOrder = {
           mealName: mealName,
           description: description,
           mealType: mealType,
         };
+
+
     
-        const { registerUser } = this.props;
+        const { setMealOrder } = this.props;
+        setMealOrder(newMealOrder)
     
-        e.preventDefault();
+        
     
       };
 
@@ -44,7 +57,7 @@ export default class Settings extends Component{
         return(
             <React.Fragment>
                 <h5>Add a meal</h5>
-                <Form onSubmit={this.onSubmit}>
+                <Form >
                     <Form.Group controlId="formMealName">
                         <Form.Label>Meal Name</Form.Label>
                         <Form.Control
@@ -69,12 +82,12 @@ export default class Settings extends Component{
                     </Form.Group>
                     <Form.Group controlId="exampleForm.ControlSelect1">
                         <Form.Label>Select Type</Form.Label>
-                        <Form.Control as="select" onChange={this.onChange}>
+                        <Form.Control as="select" onChange={this.onMealTypeSelect}>
                         <option>Lunch</option>
                         <option>Diner</option>
                         </Form.Control>
                     </Form.Group>
-                    <Button size="sm" variant="success" type="submit">
+                    <Button size="sm" variant="success" type="submit" onClick={this.onSubmit}>
                         Submit
                     </Button>
                 </Form>
@@ -149,3 +162,12 @@ export default class Settings extends Component{
         )
     }
 }
+
+const mapStateToProps = state => ({
+    
+  });
+  
+  export default connect(
+    mapStateToProps,
+    { setMealOrder }
+  )(withRouter(Settings));

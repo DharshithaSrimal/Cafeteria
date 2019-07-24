@@ -21,6 +21,15 @@ db.connect(err => {
   console.log("connected...");
 });
 
+app.get('/neworder', (req, res) => {
+  let post = {meal_name: 'post one', description: 'this is post 1', meal_type: 'test'};
+  let sql = 'INSERT INTO meal orders SET ? ';
+  let query = db.query(sql, post, (err, result) => {
+    if(err) throw err;
+    res.send('testText');
+  });
+});
+
 // //bodyparser middleware
 // app.use(bodyParser.json());
 
