@@ -7,8 +7,9 @@ import {
 
 //set meal order
 export const setMealOrder = (newMealOrder) => dispatch => {
+  console.log(newMealOrder);
   axios
-    .post('/neworder', newMealOrder)
+    .post('/mealorders/add', newMealOrder)
     // .then(res => history.push('/settings'))
     .catch(err =>
       console.log('===',err)

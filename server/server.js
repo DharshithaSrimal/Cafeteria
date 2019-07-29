@@ -3,7 +3,7 @@ const mysql = require('mysql');
 // const bodyParser = require('body-parser');
 // const path = require('path');
 
-// const items = require("./routes/api/Items");
+// const mealOrders = require('./routes/api/MealOrders');
 
 const app = express();
 
@@ -21,27 +21,31 @@ db.connect(err => {
   console.log('connected...');
 });
 
-app.get('/neworder', (req, res) => {
+// app.use('/mealorders', mealOrders);
+
+app.post('/mealorders/add', (req, res) => {
   const post = {
     meal_name: 'post one',
     description: 'this is post 1',
     meal_type: 'test'
   };
-  const sql = 'INSERT INTO meal orders SET ? ';
-  const query = db.query(sql, post, (err, result) => {
+  console.log('==============', req.body.meal_name);
+
+  // console.log('11111', req);
+
+  const sql = `INSERT INTO meal_orders  VALUES (NULL, '33','33','33')`;
+  db.query(sql, post, (err, result) => {
     if (err) throw err;
     res.send('testText');
   });
 });
 
-app.get('/api/customers', (req, res) => {
-  const customers = [
-    { id: 1, meal_name: 'John', description: 'Doe', meal_type: '123' },
-    { id: 2, meal_name: 'foo', description: 'bar', meal_type: '123' },
-    { id: 3, meal_name: 'John', description: 'Doe', meal_type: '123' }
-  ];
-
-  res.json(customers);
+app.get('/mealorders', (req, res) => {
+  const sql = 'SELECT * FROM `meal_orders`';
+  db.query(sql, (err, results) => {
+    if (err) throw err;
+    res.json(results);
+  });
 });
 
 // //bodyparser middleware

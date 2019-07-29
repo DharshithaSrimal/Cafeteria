@@ -18,11 +18,12 @@ class Settings extends Component {
   }
 
   componentDidMount() {
-    fetch('/api/customers')
+    fetch('/mealorders')
       .then(res => res.json())
       .then(mealOrders =>
-        this.setState({ mealOrders }, () =>
-          console.log('mealOrders fetched...', mealOrders)
+        this.setState({ mealOrders }, 
+          // () =>
+          // console.log('mealOrders fetched...', mealOrders)
         )
       );
   }
@@ -105,7 +106,7 @@ class Settings extends Component {
 
     mealOrders.map((data, index) => {
       mealOrderView.push(
-        <tr>
+        <tr key={index}>
           <td>{data.id}</td>
           <td>{data.meal_name}</td>
           <td>{data.description}</td>
