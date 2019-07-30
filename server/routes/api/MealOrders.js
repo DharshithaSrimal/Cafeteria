@@ -1,5 +1,17 @@
-// const express = require('express');
+const express = require('express');
 
+const mealOrders = express.Router();
+const cors = require('cors');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+
+mealOrders.use(cors());
+
+mealOrders.post('/mealOrders/add', (req, res) => {
+  console.log('---', req.body);
+});
+
+module.exports = mealOrders;
 // const router = express.Router();
 
 // //Item model
