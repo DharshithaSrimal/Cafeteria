@@ -7,8 +7,23 @@ const bcrypt = require('bcrypt');
 
 mealOrders.use(cors());
 
+const db = require('../../database/db');
+
 mealOrders.post('/mealOrders/add', (req, res) => {
-  console.log('---', req.body);
+  const sql = `INSERT INTO meal_orders  VALUES
+    (NULL, ${req.body.meal_name},${req.body.description},${req.body.meal_type})`;
+  db.query(sql, (err, result) => {
+    if (err) throw err;
+    res.send(result);
+  });
+});
+
+mealOrders.get('/mealorders', (req, res) => {
+  const sql = 'SELECT * FROM `meal_orders`';
+  db.query(sql, (err, results) => {
+    if (err) throw err;
+    res.json(results);
+  });
 });
 
 module.exports = mealOrders;
