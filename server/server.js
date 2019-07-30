@@ -1,6 +1,6 @@
 const express = require('express');
 const mysql = require('mysql');
-// const bodyParser = require('body-parser');
+const bodyParser = require('body-parser');
 // const path = require('path');
 
 // const mealOrders = require('./routes/api/MealOrders');
@@ -48,8 +48,8 @@ app.get('/mealorders', (req, res) => {
   });
 });
 
-// //bodyparser middleware
-// app.use(bodyParser.json());
+//bodyparser middleware
+app.use(bodyParser.json());
 
 // //DB config
 // const db = require("./config/keys").mongoURI;
