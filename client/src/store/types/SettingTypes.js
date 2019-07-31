@@ -1,0 +1,4 @@
+export const SET_MEAL_ORDER = 'SET_MEAL_ORDER';
+export const GET_MEAL_ORDER = 'GET_MEAL_ORDER';
+export const DELETE_MEAL_ORDER = 'DELETE_MEAL_ORDER';
+
