@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
-import { Row, Col, Form, Button, Table } from 'react-bootstrap';
+import { Row, Col, Form, Button, Table, Modal } from 'react-bootstrap';
 import './Settings.css';
 import { connect } from 'react-redux';
-import { setMealOrder } from '../../store/actions/SettingsActions';
+import { setMealOrder,deleteMealOrder } from '../../store/actions/SettingsActions';
 
 class Settings extends Component {
   constructor(props) {
@@ -13,7 +13,8 @@ class Settings extends Component {
       mealName: '',
       description: '',
       mealType: '',
-      errors: {}
+      errors: {},
+      showModal: false
     };
   }
 
@@ -53,11 +54,91 @@ class Settings extends Component {
     setMealOrder(newMealOrder);
   };
 
-  handleOnEdit = () => {};
+  handleOnEdit = (dat) => {
+    console.log('0000',dat)
+    this.setState({
+      mealName: dat.meal_name,
+      description: dat.description,
+      mealType: dat.meal_type,
+      showModal: true
+    });
+  };
 
-  handleOnDelete = () => {};
+  handleOnDelete = (id) => {
+    const { deleteMealOrder } = this.props;
+    deleteMealOrder(id);
+  };
 
-  renderAddMeal = () => (
+  handleOnClose = () => {
+    this.setState({
+      
+      showModal: false
+    });
+  }
+
+  renderModal = () => {
+    const editMeal = this.renderEditMeal();
+
+    return(
+      <Modal show={this.state.showModal} onHide={this.handleOnClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Modal heading</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {editMeal}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={this.handleOnClose}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={this.handleOnClose}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  }
+
+  renderEditMeal = () => {
+    return(
+<React.Fragment>
+      <Form>
+        <Form.Group controlId="formMealName">
+          <Form.Label>Meal Name</Form.Label>
+          <Form.Control
+            name="mealName"
+            type="text"
+            placeholder="Meal Name"
+            onChange={this.onChange}
+            value={this.state.mealName}
+          />
+        </Form.Group>
+
+        <Form.Group controlId="formMealDes">
+          <Form.Label>Description</Form.Label>
+          <Form.Control
+            type="textarea"
+            rows="4"
+            name="description"
+            onChange={this.onChange}
+            value={this.state.description}
+          />
+          <Form.Text className="text-muted">Enter the curries.</Form.Text>
+        </Form.Group>
+        <Form.Group controlId="exampleForm.ControlSelect1">
+          <Form.Label>Select Type</Form.Label>
+          <Form.Control as="select" onChange={this.onMealTypeSelect}>
+            <option>Lunch</option>
+            <option>Diner</option>
+          </Form.Control>
+        </Form.Group>
+      </Form>
+    </React.Fragment>
+    );
+  }
+
+  renderAddMeal = () => {
+  return(
     <React.Fragment>
       <h5>Add a meal</h5>
       <Form>
@@ -89,39 +170,41 @@ class Settings extends Component {
           </Form.Control>
         </Form.Group>
         <Button
-          size="sm"
-          variant="success"
-          type="submit"
-          onClick={this.handleOnSubmit}
-        >
-          Submit
-        </Button>
+      size="sm"
+      variant="success"
+      type="submit"
+      onClick={this.handleOnSubmit}
+    >
+    Submit
+  </Button>
       </Form>
     </React.Fragment>
   );
+    
+  };
 
   renderMealOrders = () => {
     const { mealOrders } = this.state;
     const mealOrderView = [];
 
-    mealOrders.map((data, index) => {
+    mealOrders.map((dat, indx) => {
       mealOrderView.push(
-        <tr key={index}>
-          <td>{data.id}</td>
-          <td>{data.meal_name}</td>
-          <td>{data.description}</td>
-          <td>{data.meal_type}</td>
-          <td>
-            <Button size="sm" variant="warning" onClick={this.handleOnEdit}>
-              Edit
-            </Button>
-          </td>
-          <td>
-            <Button size="sm" variant="danger" onClick={this.handleOnDelete}>
-              Delete
-            </Button>
-          </td>
-        </tr>
+        <tr key={indx}>
+        <td>{indx + 1}</td>
+        <td>{dat.meal_name}</td>
+        <td>{dat.description}</td>
+        <td>{dat.meal_type}</td>
+        <td>
+          <Button size="sm" variant="warning" onClick={() => this.handleOnEdit(dat)}>
+            Edit
+          </Button>
+        </td>
+        <td>
+          <Button size="sm" variant="danger" onClick={() => this.handleOnDelete(dat.order_id)}>
+            Delete
+          </Button>
+        </td>
+      </tr>
       );
     });
 
@@ -131,6 +214,7 @@ class Settings extends Component {
   render() {
     const addMeal = this.renderAddMeal();
     const mealOrders = this.renderMealOrders();
+    const modal = this.renderModal();
 
     return (
       <div>
@@ -139,6 +223,7 @@ class Settings extends Component {
           <Row>
             <Col md={3}>{addMeal}</Col>
             <Col md={6}>
+              {modal}
               <h5>Today's meal sets</h5>
               <Table responsive size="sm">
                 <thead>
@@ -152,7 +237,7 @@ class Settings extends Component {
                 </thead>
                 <tbody>{mealOrders}</tbody>
               </Table>
-              ;
+              
             </Col>
             <Col md={3}>
               <h5>Set closing time for meal orders</h5>
@@ -202,5 +287,5 @@ const mapStateToProps = state => ({});
 
 export default connect(
   mapStateToProps,
-  { setMealOrder }
+  { setMealOrder,deleteMealOrder }
 )(withRouter(Settings));

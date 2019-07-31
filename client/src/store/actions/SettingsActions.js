@@ -19,3 +19,17 @@ export const setMealOrder = (newMealOrder) => dispatch => {
       // })
     );
 };
+
+
+export const deleteMealOrder = (id) => dispatch => {
+  axios
+    .delete(`/mealorders/${id}`)
+    // .then(res => history.push('/settings'))
+    .catch(err =>
+      console.log('===',err)
+      // dispatch({
+      //   type: 'GET_ERRORS',
+      //   payload: err.response.data
+      // })
+    );
+};

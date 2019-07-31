@@ -10,8 +10,9 @@ mealOrders.use(cors());
 const db = require('../../database/db');
 
 mealOrders.post('/mealOrders/add', (req, res) => {
+  console.log(req.body);
   const sql = `INSERT INTO meal_orders  VALUES
-    (NULL, ${req.body.meal_name},${req.body.description},${req.body.meal_type})`;
+    (NULL, '${req.body.mealName}','${req.body.description}','${req.body.mealType}')`;
   db.query(sql, (err, result) => {
     if (err) throw err;
     res.send(result);
@@ -20,6 +21,25 @@ mealOrders.post('/mealOrders/add', (req, res) => {
 
 mealOrders.get('/mealorders', (req, res) => {
   const sql = 'SELECT * FROM `meal_orders`';
+  db.query(sql, (err, results) => {
+    if (err) throw err;
+    res.json(results);
+  });
+});
+
+mealOrders.put('/mealorders/:id', (req, res) => {
+  console.log(req.body);
+  console.log(req.params);
+  const sql = `UPDATE meal_orders SET meal_name = '${req.body.mealName}', 
+    description = '${req.body.description}', meal_type = '${req.body.mealType}' WHERE order_id = '${req.params.id}'`;
+  db.query(sql, (err, results) => {
+    if (err) throw err;
+    res.json(results);
+  });
+});
+
+mealOrders.delete('/mealorders/:id', (req, res) => {
+  const sql = `DELETE FROM  meal_orders WHERE order_id = ${req.params.id}`;
   db.query(sql, (err, results) => {
     if (err) throw err;
     res.json(results);
