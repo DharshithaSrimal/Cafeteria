@@ -2,14 +2,16 @@ import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { Row, Col, Form, Button, Table, Modal } from 'react-bootstrap';
 import './Settings.css';
-import { connect } from 'react-redux';
-import { setMealOrder,deleteMealOrder } from '../../store/actions/SettingsActions';
+// import { connect } from 'react-redux';
+import { setMealOrder,deleteMealOrder,updateMealOrder } from '../../store/actions/SettingsActions';
+import axios from 'axios';
 
 class Settings extends Component {
   constructor(props) {
     super(props);
     this.state = {
       mealOrders: [],
+      mealId: '',
       mealName: '',
       description: '',
       mealType: '',
@@ -18,15 +20,18 @@ class Settings extends Component {
     };
   }
 
+  getData = () => {
+    axios.get('/mealorders')
+    .then(res => 
+      this.setState({ mealOrders: res.data }, 
+        
+      )
+
+    );
+  }
+
   componentDidMount() {
-    fetch('/mealorders')
-      .then(res => res.json())
-      .then(mealOrders =>
-        this.setState({ mealOrders }, 
-          // () =>
-          // console.log('mealOrders fetched...', mealOrders)
-        )
-      );
+    this.getData();
   }
 
   onChange = e => {
@@ -50,13 +55,15 @@ class Settings extends Component {
       description,
       mealType
     };
-    const { setMealOrder } = this.props;
+    // const { setMealOrder } = this.props;
     setMealOrder(newMealOrder);
+    this.getData();
   };
 
   handleOnEdit = (dat) => {
     console.log('0000',dat)
     this.setState({
+      mealId: dat.order_id,
       mealName: dat.meal_name,
       description: dat.description,
       mealType: dat.meal_type,
@@ -65,8 +72,9 @@ class Settings extends Component {
   };
 
   handleOnDelete = (id) => {
-    const { deleteMealOrder } = this.props;
+    // const { deleteMealOrder } = this.props;
     deleteMealOrder(id);
+    this.getData();
   };
 
   handleOnClose = () => {
@@ -74,6 +82,24 @@ class Settings extends Component {
       
       showModal: false
     });
+  }
+
+  handleOnSaveChanges = (e) => {
+    e.preventDefault();
+    const { mealId,mealName, description, mealType } = this.state;
+
+    const newMealOrder = {
+      mealId,
+      mealName,
+      description,
+      mealType
+    };
+
+    updateMealOrder(newMealOrder);
+    this.setState({
+      showModal: false
+    });
+    this.getData();
   }
 
   renderModal = () => {
@@ -91,7 +117,7 @@ class Settings extends Component {
           <Button variant="secondary" onClick={this.handleOnClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={this.handleOnClose}>
+          <Button variant="primary" onClick={this.handleOnSaveChanges}>
             Save Changes
           </Button>
         </Modal.Footer>
@@ -127,7 +153,7 @@ class Settings extends Component {
         </Form.Group>
         <Form.Group controlId="exampleForm.ControlSelect1">
           <Form.Label>Select Type</Form.Label>
-          <Form.Control as="select" onChange={this.onMealTypeSelect}>
+          <Form.Control as="select" onChange={this.onMealTypeSelect} defaultValue={this.state.mealType}>
             <option>Lunch</option>
             <option>Diner</option>
           </Form.Control>
@@ -285,7 +311,4 @@ class Settings extends Component {
 
 const mapStateToProps = state => ({});
 
-export default connect(
-  mapStateToProps,
-  { setMealOrder,deleteMealOrder }
-)(withRouter(Settings));
+export default Settings;

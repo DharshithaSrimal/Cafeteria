@@ -5,8 +5,14 @@ import {
     DELETE_MEAL_ORDER
  } from '../types/SettingTypes';
 
+// update meal order
+export const updateMealOrder = (mealOrder) => {
+  console.log(mealOrder);
+  axios.put('/mealorders/'+ mealOrder.mealId, mealOrder)
+}
+
 //set meal order
-export const setMealOrder = (newMealOrder) => dispatch => {
+export const setMealOrder = (newMealOrder)  => {
   console.log(newMealOrder);
   axios
     .post('/mealorders/add', newMealOrder)
@@ -21,7 +27,7 @@ export const setMealOrder = (newMealOrder) => dispatch => {
 };
 
 
-export const deleteMealOrder = (id) => dispatch => {
+export const deleteMealOrder = (id) => {
   axios
     .delete(`/mealorders/${id}`)
     // .then(res => history.push('/settings'))
