@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { Row, Col, Form, Button, Table, Modal } from 'react-bootstrap';
 import './Settings.css';
-// import { connect } from 'react-redux';
 import { setMealOrder,deleteMealOrder,updateMealOrder } from '../../store/actions/SettingsActions';
 import axios from 'axios';
 
